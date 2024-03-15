@@ -1,3 +1,8 @@
+/* Kayla Butler
+COP 3502 Section 3
+Lab Assignment 8
+14 March 2024 */
+
 #include <time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -31,6 +36,69 @@ size_t Size(void* ptr)
 // extraMemoryAllocated counts bytes of extra memory allocated
 void mergeSort(int pData[], int l, int r)
 {
+	int mid= (l + r)/2;
+
+	if( l < r)
+	{
+		mergeSort(pData, l, mid);
+		mergeSort(pData, mid + 1, r);
+	}
+
+	int i, j, k;
+    int n1 = mid - l + 1;
+    int n2 =  r - mid;
+
+
+    int *left = (int*)Alloc(n1*sizeof(int));
+    int *right = (int*)Alloc(n2*sizeof(int));
+
+    for (i = 0; i < n1; i++)
+	{
+        left[i] = pData[l + i];
+	}
+
+    for (j = 0; j < n2; j++)
+	{
+        right[j] = pData[mid + 1+ j];
+	}
+
+    i = 0;
+    j = 0;
+    k = l;
+    while (i < n1 && j < n2)
+    {
+        if (left[i] <= right[j])
+        {
+            pData[k] = left[i];
+            i++;
+        }
+
+        else
+        {
+            pData[k] = right[j];
+            j++;
+        }
+
+        k++;
+    }
+
+
+    while (i < n1)
+    {
+        pData[k] = left[i];
+        i++;
+        k++;
+    }
+
+    while (j < n2)
+    {
+        pData[k] = right[j];
+        j++;
+        k++;
+    }
+	
+    DeAlloc(left);
+    DeAlloc(right);
 }
 
 // parses input file to an integer array
@@ -67,19 +135,20 @@ int parseData(char *inputFileName, int **ppData)
 // prints first and last 100 items in the data array
 void printArray(int pData[], int dataSz)
 {
-	int i, sz = dataSz - 100;
-	printf("\tData:\n\t");
-	for (i=0;i<100;++i)
-	{
-		printf("%d ",pData[i]);
-	}
-	printf("\n\t");
-	
-	for (i=sz;i<dataSz;++i)
-	{
-		printf("%d ",pData[i]);
-	}
-	printf("\n\n");
+    int i, sz = (dataSz > 100 ? dataSz - 100 : 0);
+    int firstHundred = (dataSz < 100 ? dataSz : 100);
+    printf("\tData:\n\t");
+    for (i=0;i<firstHundred;++i)
+    {
+        printf("%d ",pData[i]);
+    }
+    printf("\n\t");
+    
+    for (i=sz;i<dataSz;++i)
+    {
+        printf("%d ",pData[i]);
+    }
+    printf("\n\n");
 }
 
 int main(void)
